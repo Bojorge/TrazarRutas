@@ -196,7 +196,7 @@ public class MapasFragment extends Fragment implements OnMapReadyCallback {
 
                     // Esto es el link donde se genera el json
                     //https://maps.googleapis.com/maps/api/directions/json?origin=9.92807,-84.09072&destination=9.863809,-83.916193
-                    String url="https://maps.googleapis.com/maps/api/directions/json?origin="+latitudOrigen+","+longitudOrigen+"&destination=9.863809,-83.916193";
+                    String url="https://maps.googleapis.com/maps/api/directions/json?origin="+latitudOrigen+","+longitudOrigen+"&destination=9.9333300,-84.0833300";
 
                     RequestQueue queue=Volley.newRequestQueue(getActivity());
                     StringRequest stringRequest=new StringRequest(Request.Method.GET,url, new Response.Listener<String>() {
