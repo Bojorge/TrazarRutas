@@ -37,10 +37,7 @@ public class MapasFragment extends Fragment implements OnMapReadyCallback {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-
-    ////////////////////////////////
-    //private OnMapReadyCallback onMapReadyCallback;//////////////////////
-////////////////////////////////////////////
+    
     public MapasFragment() {
         // Required empty public constructor
     }
