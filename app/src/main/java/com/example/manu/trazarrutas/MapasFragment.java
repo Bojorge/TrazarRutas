@@ -12,9 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -170,6 +172,13 @@ public class MapasFragment extends Fragment implements OnMapReadyCallback {
                     LatLng miPosicion=new LatLng(latitudOrigen,longitudOrigen);
 
                     map.addMarker(new MarkerOptions().position(miPosicion).title("Esta es mi posicion"));
+
+                    CameraPosition cameraPosition=new CameraPosition.Builder()
+                            .target(new LatLng(latitudOrigen,longitudOrigen))
+                            .zoom(17)
+                            .bearing(90) //giro orizontal//.tilt(float v) inclinacion
+                            .build();
+                    map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
             }
         });
