@@ -3,6 +3,7 @@ package com.example.manu.trazarrutas;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,9 +27,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.PolyUtil;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 
 /**
@@ -194,7 +200,7 @@ public class MapasFragment extends Fragment implements OnMapReadyCallback {
 
                     RequestQueue queue=Volley.newRequestQueue(getActivity());
                     StringRequest stringRequest=new StringRequest(Request.Method.GET,url, new Response.Listener<String>() {
-                        //@Override
+                        @Override
                         public void onResponse(String response) {
                             try {
                                 jso=new JSONObject(response);
@@ -218,7 +224,27 @@ public class MapasFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void trazarRuta(JSONObject jso) {
+        JSONArray jRoutes;
+        JSONArray jLegs;
+        JSONArray jSteps;
+        try{
+            jRoutes=jso.getJSONArray("routes");
+            for(int i=0;i<jRoutes.length();i++){
+                jLegs=((JSONObject)(jRoutes.get(i))).getJSONArray("legs");
+                for(int j=0;j<jLegs.length();j++){
+                    jSteps=((JSONObject)(jLegs.get(j))).getJSONArray("steps");
+                    for(int k=0;k<jSteps.length();k++){
 
+                        String polyline=""+((JSONObject)((JSONObject)jSteps.get(k)).get("polyline")).get("points");
+                        Log.i( "end",""+polyline);
+                        List<LatLng> list=PolyUtil.decode(polyline);
+                        map.addPolyline(new PolylineOptions().addAll(list).color(Color.RED).width(8));
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 
