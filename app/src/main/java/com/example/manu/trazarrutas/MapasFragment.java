@@ -8,10 +8,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -20,6 +27,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -176,12 +184,41 @@ public class MapasFragment extends Fragment implements OnMapReadyCallback {
                     CameraPosition cameraPosition=new CameraPosition.Builder()
                             .target(new LatLng(latitudOrigen,longitudOrigen))
                             .zoom(17)
-                            .bearing(90) //giro orizontal//.tilt(float v) inclinacion
+                            .bearing(90) //giro horizontal//.tilt(float v) inclinacion
                             .build();
                     map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                    // Esto es el link donde se genera el json
+                    //https://maps.googleapis.com/maps/api/directions/json?origin=9.92807,-84.09072&destination=9.863809,-83.916193
+                    String url="https://maps.googleapis.com/maps/api/directions/json?origin="+latitudOrigen+","+longitudOrigen+"&destination=9.863809,-83.916193";
+
+                    RequestQueue queue=Volley.newRequestQueue(getActivity());
+                    StringRequest stringRequest=new StringRequest(Request.Method.GET,url, new Response.Listener<String>() {
+                        //@Override
+                        public void onResponse(String response) {
+                            try {
+                                jso=new JSONObject(response);
+                                trazarRuta(jso);
+                                Log.i("jsonRuta: ",""+response);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                        }
+                    });
+
+                    queue.add(stringRequest);
                 }
             }
         });
+    }
+
+    private void trazarRuta(JSONObject jso) {
+
     }
 
 
